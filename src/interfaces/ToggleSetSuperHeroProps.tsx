@@ -1,3 +1,3 @@
 export interface ToggleSetSuperHeroProps {
-    handlerSetSuperhero: (newSuperhero: string) => void;
+    handlerSetSuperhero: (newSuperhero: number) => void;
 }

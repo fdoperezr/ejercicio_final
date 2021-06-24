@@ -1,20 +1,32 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { deleteSuperHero } from '../../store/module/superheroes/actions'
-import { superheroesSelector } from '../../store/module/superheroes/selectors'
 import {
     Link,
 } from 'react-router-dom'
+import { deleteProduct } from '../../clients/products'
+import { initialStateDeleteOne } from '../../store/module/products/deleteOneReducer'
+import { productDeleteOneSelector } from '../../store/module/products/selectors'
 // No supe como pasar la interfaz hasta aca ToggleSetSuperHeroProps como tipo de handlerSetSuperhero
-export default function SuperHeroActions(props: { id: string, handlerSetSuperhero: (newSuperhero: string) => void}) {
+export default function SuperHeroActions(props: { id: number, handlerSetSuperhero: (newSuperhero: number) => void}) {
 
-    const superHeroes = useSelector(superheroesSelector)
+    const productData: any = useSelector(productDeleteOneSelector)
+    const [product, setProduct] = useState(initialStateDeleteOne)  
     
     const dispatch = useDispatch()
-    const onClickHandler = () =>{
-        dispatch(deleteSuperHero(props.id.toString()))
-        alert('Super Héroe eliminado correctamente')
+    const onClickHandler = (e: any) =>{
+        e.preventDefault()
+        dispatch(deleteProduct(props.id))
     }
+
+    useEffect(() => {
+        setProduct(productData);
+        if (product.success && !!!product.loading) {
+            alert('Super Héroe eliminado correctamente')
+        }
+        
+    }, [productData])
+
+    if (product.loading) return (<div className="d-flex justify-content-center mt-4">Cargando...</div>)
 
     return (
         <>

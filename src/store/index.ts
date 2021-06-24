@@ -1,11 +1,13 @@
-import { createStore, combineReducers, applyMiddleware } from 'redux'
-import superHeroReducer from './module/superheroes'
+import { createStore, applyMiddleware, combineReducers } from 'redux'
+import logger from 'redux-logger'
+import thunk from 'redux-thunk'
 
+import productsReducer from './module/products'
 
 const rootReducer = combineReducers({
-    superheroes: superHeroReducer,
+    products: productsReducer,
 })
 
-const store = createStore(rootReducer)
+const store = createStore(rootReducer, applyMiddleware(logger, thunk))
 
-export default store;
+export default store

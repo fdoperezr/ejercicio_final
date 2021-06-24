@@ -5,10 +5,10 @@ import SuperHeroContext from '../../contexts/SuperHeroContext'
 
 export default function Home() {
 
-    const [currentSuperhero, setcurrentSuperhero] = useState<string>('')
+    const [currentSuperhero, setcurrentSuperhero] = useState<number>(0)
 
 
-    const handlerSetSuperhero = (newSuperhero: string) => {
+    const handlerSetSuperhero = (newSuperhero: number) => {
         setcurrentSuperhero(newSuperhero)
       }
     return (

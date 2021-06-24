@@ -6,6 +6,7 @@ import {
 import './App.css';
 import Home from './containers/home/Home';
 import SuperHeroCard from './components/superhero-card/SuperHeroCard'
+import NotFound from './containers/not-found/NotFound'
 import { Provider } from 'react-redux'
 import store from './store';
 
@@ -19,6 +20,9 @@ function App() {
           </Route>
           <Route path="/superhero/card/:id">
             <SuperHeroCard />
+          </Route>
+          <Route path="/404">
+            <NotFound />
           </Route>
         </Router>
       </Provider>

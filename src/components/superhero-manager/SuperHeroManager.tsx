@@ -5,68 +5,69 @@ import { insertSuperHero, updateSuperHero } from '../../store/module/superheroes
 import { superheroesSelector } from '../../store/module/superheroes/selectors'
 import SuperHeroContext from '../../contexts/SuperHeroContext'
 import { ToggleSetSuperHeroProps } from '../../interfaces/ToggleSetSuperHeroProps';
+import { productGetOneSelector } from '../../store/module/products/selectors'
+import { initialStateGetOne } from '../../store/module/products/getOneReducer'
+import { productGetOneAction } from '../../store/module/products/actions'
 
 
 export default function SuperHeroManager({ handlerSetSuperhero }: ToggleSetSuperHeroProps) {
 
+    const productData: any = useSelector(productGetOneSelector)
+    const [product, setProduct] = useState(initialStateGetOne) 
+    const currentProduct: number = useContext<number>(SuperHeroContext);
+    
     const dispatch = useDispatch()
-    const currentSuperHero: string = useContext<string>(SuperHeroContext);
-    const superHeroes = useSelector(superheroesSelector)
-    const [superhero, setsuperhero] = useState<SuperHero>({
-        id: ' ',
-        name: '',
-        publisher: '',
-        alter_ego: '',
-        first_appearance: '',
-    })
 
     useEffect(() => {
-        setsuperhero(superHeroes.superheroes.filter((i: { id: string }) => i.id == currentSuperHero.toString())[0])
-    }, [currentSuperHero]);
+        dispatch(productGetOneAction(currentProduct))
+    }, [dispatch, currentProduct])
 
-    const hanlderSubmit = (event: any): void => {
-        event.preventDefault();
-        if (currentSuperHero == '')
-        {
-            dispatch(insertSuperHero(superhero))
-            alert('Super Héroe ingresado correctamente');
-            setEmptySuperHero()
-        }
-        else
-        {
-            dispatch(updateSuperHero(superhero))
-            alert('Super Héroe actualizado correctamente');
-        }
-    };
+    useEffect(() => {
+        setProduct(productData);
+        debugger
+    }, [productData])
 
-    const setEmptySuperHero= () => {
-        setsuperhero({
-            id: ' ',
-            name: '',
-            publisher: '',
-            alter_ego: '',
-            first_appearance: ''
-        })
+
+    // const hanlderSubmit = (event: any): void => {
+    //     event.preventDefault();
+    //     if (currentProduct != 0)
+    //     {
+    //         dispatch(insertSuperHero(superhero))
+    //         alert('Super Héroe ingresado correctamente');
+    //         setEmptySuperHero()
+    //     }
+    //     else
+    //     {
+    //         dispatch(updateSuperHero(superhero))
+    //         alert('Super Héroe actualizado correctamente');
+    //     }
+    // };
+
+    const setEmptyProduct= () => {
+        setProduct(initialStateGetOne)
     }
     const hanlderIngresarNuevo = (event: any): void => {
-        setEmptySuperHero()
-        handlerSetSuperhero('')
+        // setEmptyProduct()
+        handlerSetSuperhero(0)
 
     };
 
     const hanlderInput = (event: any): void => {
-        setsuperhero({
-            ...superhero,
+        setProduct({
+            ...product,
             [event.target.name]: event.target.value
         })
 
     };
 
+    if (product.loading ||product.success === null) return (<div className="d-flex justify-content-center mt-4">Cargando...</div>)
+
+
     return (
         <>
             <div
                 className="container py-5 text-center">
-                <h2>{currentSuperHero == '' ? `Ingresar` : `Actualizar`} Super Héroe</h2>
+                <h2>{currentProduct === 0 ? `Ingresar` : `Actualizar`} Producto</h2>
             </div>
             <div
                 className="container d-flex justify-content-center">
@@ -74,9 +75,10 @@ export default function SuperHeroManager({ handlerSetSuperhero }: ToggleSetSuper
                     className="col-md-7 col-lg-8">
                     <form className="needs-validation"
                         noValidate={false}
-                        onSubmit={hanlderSubmit}>
+                        // onSubmit={hanlderSubmit}
+                        >
                         <div className="row g-3">
-                            <div className="col-sm-6">
+                            <div className="col-sm-12">
                                 <label className="form-label"
                                     htmlFor="firstName"
                                 >
@@ -86,7 +88,7 @@ export default function SuperHeroManager({ handlerSetSuperhero }: ToggleSetSuper
                                     type="text"
                                     id="firstName"
                                     placeholder=""
-                                    value={superhero?.name}
+                                    value={product?.data.name}
                                     name="name"
                                     onChange={hanlderInput}
                                     required />
@@ -95,16 +97,16 @@ export default function SuperHeroManager({ handlerSetSuperhero }: ToggleSetSuper
                                 </div>
                             </div>
 
-                            <div className="col-sm-6">
+                            <div className="col-sm-12">
                                 <label className="form-label"
                                     htmlFor="lastName"
                                 >
-                                    Editorial
+                                    Descripción
                                     </label>
                                 <input className="form-control"
                                     type="text"
                                     placeholder=""
-                                    value={superhero?.publisher}
+                                    value={product?.data.description}
                                     name="publisher"
                                     onChange={hanlderInput}
                                     required />
@@ -117,12 +119,12 @@ export default function SuperHeroManager({ handlerSetSuperhero }: ToggleSetSuper
                                 <label className="form-label"
                                     htmlFor="email"
                                 >
-                                    Alter Ego
+                                    Precio
                                     </label>
                                 <input className="form-control"
-                                    type="text"
+                                    type="number"
 
-                                    value={superhero?.alter_ego}
+                                    value={product?.data.price}
                                     name="alter_ego"
                                     onChange={hanlderInput}
                                     required />
@@ -134,12 +136,12 @@ export default function SuperHeroManager({ handlerSetSuperhero }: ToggleSetSuper
                                 <label className="form-label"
                                     htmlFor="email"
                                 >
-                                    Primera aparición
+                                    URL imagen
                                     </label>
                                 <input className="form-control"
                                     type="text"
 
-                                    value={superhero?.first_appearance}
+                                    value={product?.data.imgUrl}
                                     name="first_appearance"
                                     onChange={hanlderInput}
                                     required />
@@ -150,13 +152,14 @@ export default function SuperHeroManager({ handlerSetSuperhero }: ToggleSetSuper
 
                             <button className="w-100 btn btn-primary btn-lg"
                                 type="submit">
-                                {currentSuperHero == '' ? `Ingresar` : `Actualizar`}
+                                {currentProduct == 0 ? `Ingresar` : `Actualizar`}
                             </button>
                             {
-                                currentSuperHero != '' ?
+                                currentProduct != 0 ?
                                     <button className="w-100 btn btn-primary btn-lg"
                                         type="button"
-                                        onClick={hanlderIngresarNuevo}>
+                                        onClick={hanlderIngresarNuevo}
+                                        >
                                     Ingresar Nuevo                
                                     </button>
                                     : null
