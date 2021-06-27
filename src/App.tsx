@@ -18,7 +18,7 @@ function App() {
           <Route path="/" exact>
             <Home />
           </Route>
-          <Route path="/superhero/card/:id">
+          <Route path="/product/card/:id">
             <SuperHeroCard />
           </Route>
           <Route path="/404">

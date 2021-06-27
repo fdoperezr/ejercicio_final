@@ -1,15 +1,20 @@
-# Ejercicio Clase 03
+# Ejercicio Clase 04
+
+
+## Ejecutar api-mock
+https://github.com/docentedev/api-mock en puerto 4000
 
 ## Ejecutar con npm start
 
 Preview:
 ![Preview](./public/img/preview.png)
 
-## Duda:
 
-Se muestra el siguiente error por consola pero no sé cuales son las razones, la aplicación funciona igual a pesar del error.
+## Probar siguiente caso
 
-Error:
-![Preview](./public/img/error.png)
+Preview 404:
+http://localhost:3000/superhero/card/1000
+
+![Preview](./public/img/preview404.png)
 
 Fernando Pérez

@@ -28,7 +28,7 @@ export default function SuperHeroActions(props: { id: number, handlers: ToggleSe
 
     return (
         <>
-            <Link type="button" className="btn btn-sm btn-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Ver Ficha" to={`/superhero/card/${props.id}`}><i className="bi bi-person-badge"></i></Link>
+            <Link type="button" className="btn btn-sm btn-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Ver Ficha" to={`/product/card/${props.id}`}><i className="bi bi-person-badge"></i></Link>
             <button type="button" className="btn btn-sm btn-success" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar" onClick={ () => props.handlers.handlerSetSuperhero(props.id) }><i className="bi bi-pencil"></i></button>
             <button type="button" className="btn btn-sm btn-danger" onClick={onClickHandler} data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar" ><i className="bi bi-trash"></i></button>
         </>
