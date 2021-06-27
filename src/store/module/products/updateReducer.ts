@@ -1,25 +1,26 @@
 import { Selectors } from "../../types"
+import { Product } from "./types"
 
-export const initialStateDeleteOne: Selectors<number>= {
-    data: 0,
+export const initialStateUpdate : Selectors<Product> = {
+    data: {},
     success: null,
     error: null,
     errorMessage: '',
     loading: false,
 }
 
-export const PRODUCT_DELETEONE_START = 'PRODUCT_DELETEONE_START'
-export const PRODUCT_DELETEONE_SUCCESS = 'PRODUCT_DELETEONE_SUCCESS'
-export const PRODUCT_DELETEONE_FAILED = 'PRODUCT_DELETEONE_FAILED'
+export const PRODUCT_UPDATE_START = 'PRODUCT_UPDATE_START'
+export const PRODUCT_UPDATE_SUCCESS = 'PRODUCT_UPDATE_SUCCESS'
+export const PRODUCT_UPDATE_FAILED = 'PRODUCT_UPDATE_FAILED'
 
-const reducer = (prevState = initialStateDeleteOne, action: { type: string, payload: any }) => {
+const reducer = (prevState = initialStateUpdate, action: { type: string, payload: any }) => {
     switch (action.type) {
-        case PRODUCT_DELETEONE_START:
+        case PRODUCT_UPDATE_START:
             return {
                 ...prevState,
                 loading: true,
             }
-        case PRODUCT_DELETEONE_FAILED:
+        case PRODUCT_UPDATE_FAILED:
             return {
                 ...prevState,
                 loading: false,
@@ -27,7 +28,7 @@ const reducer = (prevState = initialStateDeleteOne, action: { type: string, payl
                 success: false,
                 errorMessage: action.payload,
             } 
-        case PRODUCT_DELETEONE_SUCCESS:
+        case PRODUCT_UPDATE_SUCCESS:
             return {
                 ...prevState,
                 loading: false,

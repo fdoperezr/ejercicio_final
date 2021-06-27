@@ -1,9 +1,10 @@
 import { PRODUCT_GETALL_FAILED, PRODUCT_GETALL_START, PRODUCT_GETALL_SUCCESS } from "./getAllReducer"
-import { createProduct, deleteProduct, getAllProduct, getProduct } from "../../../clients/products"
+import { createProduct, deleteProduct, getAllProduct, getProduct, updateProduct } from "../../../clients/products"
 import { Product, ProductCreate } from "./types"
 import { PRODUCT_CREATE_FAILED, PRODUCT_CREATE_START, PRODUCT_CREATE_SUCCESS } from "./createReducer"
 import { PRODUCT_GETONE_FAILED, PRODUCT_GETONE_START, PRODUCT_GETONE_SUCCESS } from "./getOneReducer"
 import { PRODUCT_DELETEONE_FAILED, PRODUCT_DELETEONE_START, PRODUCT_DELETEONE_SUCCESS } from "./deleteOneReducer"
+import { PRODUCT_UPDATE_FAILED, PRODUCT_UPDATE_START, PRODUCT_UPDATE_SUCCESS } from "./updateReducer"
 
 export const productGetAllAction = () => (dispatch: any, getState: any) => {
     dispatch({ type: PRODUCT_GETALL_START, payload: null })
@@ -33,11 +34,20 @@ export const productGetOneAction = (productId: number) => (dispatch: any, getSta
     })
 }
 
-export const productDeleteOneAction = (productId: number) => (dispatch: any, getState: any) => {
+export const productDeleteOneAction = (productId: number, token: string) => (dispatch: any, getState: any) => {
     dispatch({ type: PRODUCT_DELETEONE_START, payload: null })
-    deleteProduct(productId).then(data => {
+    deleteProduct(productId, token).then(data => {
         dispatch({ type: PRODUCT_DELETEONE_SUCCESS, payload: data })
     }).catch(e => {
         dispatch({ type: PRODUCT_DELETEONE_FAILED, payload: e })
+    })
+}
+
+export const productUpdateAction = (productId: number, product: ProductCreate, token: string) => (dispatch: any, getState: any) => {
+    dispatch({ type: PRODUCT_UPDATE_START, payload: null })
+    updateProduct(productId, product, token).then(data => {
+        dispatch({ type: PRODUCT_UPDATE_SUCCESS, payload: data })
+    }).catch(e => {
+        dispatch({ type: PRODUCT_UPDATE_FAILED, payload: e })
     })
 }

@@ -1,20 +1,20 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import SuperHeroContext from '../../contexts/SuperHeroContext'
+import SuperHeroContext, { ProductContextProps } from '../../contexts/SuperHeroContext'
 import { ToggleSetSuperHeroProps } from '../../interfaces/ToggleSetSuperHeroProps';
 import { productGetOneSelector } from '../../store/module/products/selectors'
 import { initialStateGetOne } from '../../store/module/products/getOneReducer'
-import { productCreateAction, productGetOneAction } from '../../store/module/products/actions'
+import { productCreateAction, productGetOneAction, productUpdateAction } from '../../store/module/products/actions'
 import { LoginResponse } from '../../store/module/user/types';
 import TokenContext from '../../contexts/TokenContext';
 import { ProductCreate } from '../../store/module/products/types';
 
 
-export default function SuperHeroManager({ handlerSetSuperhero }: ToggleSetSuperHeroProps) {
+export default function SuperHeroManager({ handlerSetSuperhero, handlerSetRefreshGrid }: ToggleSetSuperHeroProps) {
 
-    const productData: any = useSelector(productGetOneSelector)
+    const productData = useSelector(productGetOneSelector)
     const [product, setProduct] = useState(initialStateGetOne) 
-    const currentProduct: number = useContext<number>(SuperHeroContext);
+    const productContext = useContext<ProductContextProps>(SuperHeroContext);
     const token = useContext<LoginResponse>(TokenContext);
     const dispatch = useDispatch()
     const [productCreate, setProductCreate] = useState<ProductCreate>({
@@ -25,33 +25,53 @@ export default function SuperHeroManager({ handlerSetSuperhero }: ToggleSetSuper
     })
 
     useEffect(() => {
-        dispatch(productGetOneAction(currentProduct))
-    }, [dispatch, currentProduct])
+        dispatch(productGetOneAction(productContext.currentSuperhero))
+    }, [dispatch, productContext.currentSuperhero])
 
     useEffect(() => {
         setProduct(productData);
+        setProductCreate({ 
+            ...productCreate,
+            name: productData.data.name!,
+            description: productData.data.description!,
+            price: productData.data.price!,
+            imgUrl: productData.data.imgUrl!
+        })
     }, [productData])
 
 
     const hanlderSubmit = (event: any): void => {
         event.preventDefault();
-        if (currentProduct === 0)
+        if (productContext.currentSuperhero === 0)
         {
             dispatch(productCreateAction(productCreate, token.jwt!))
-            alert('Super Héroe ingresado correctamente');
+            alert('Producto ingresado correctamente');
             handlerSetSuperhero(0)
+            setEmptyProduct()
         }
         else
         {
-            // dispatch(updateSuperHero(superhero))
-            alert('Super Héroe actualizado correctamente');
+            dispatch(productUpdateAction(productContext.currentSuperhero ,productCreate, token.jwt!))
+            alert('Producto actualizado correctamente');
         }
+        handlerSetRefreshGrid(true)
     };
 
 
     const hanlderIngresarNuevo = (event: any): void => {
-        // setEmptyProduct()
+        setEmptyProduct()
         handlerSetSuperhero(0)
+
+    };
+
+    const setEmptyProduct = (): void => {
+        setProductCreate({
+            ...productCreate,
+            name: '',
+            price: 0,
+            imgUrl: '',
+            description: ''
+        })
 
     };
 
@@ -70,7 +90,7 @@ export default function SuperHeroManager({ handlerSetSuperhero }: ToggleSetSuper
         <>
             <div
                 className="container py-5 text-center">
-                <h2>{currentProduct === 0 ? `Ingresar` : `Actualizar`} Producto</h2>
+                <h2>{productContext.currentSuperhero === 0 ? `Ingresar` : `Actualizar`} Producto</h2>
             </div>
             <div
                 className="container d-flex justify-content-center">
@@ -91,7 +111,7 @@ export default function SuperHeroManager({ handlerSetSuperhero }: ToggleSetSuper
                                     type="text"
                                     id="firstName"
                                     placeholder=""
-                                    value={product?.data.name}
+                                    value={productCreate.name}
                                     name="name"
                                     onChange={hanlderInput}
                                     required />
@@ -109,7 +129,7 @@ export default function SuperHeroManager({ handlerSetSuperhero }: ToggleSetSuper
                                 <input className="form-control"
                                     type="text"
                                     placeholder=""
-                                    value={product?.data.description}
+                                    value={productCreate.description}
                                     name="description"
                                     onChange={hanlderInput}
                                     required />
@@ -127,7 +147,7 @@ export default function SuperHeroManager({ handlerSetSuperhero }: ToggleSetSuper
                                 <input className="form-control"
                                     type="number"
 
-                                    value={product?.data.price}
+                                    value={productCreate.price}
                                     name="price"
                                     onChange={hanlderInput}
                                     required />
@@ -144,7 +164,7 @@ export default function SuperHeroManager({ handlerSetSuperhero }: ToggleSetSuper
                                 <input className="form-control"
                                     type="text"
 
-                                    value={product?.data.imgUrl}
+                                    value={productCreate.imgUrl}
                                     name="imgUrl"
                                     onChange={hanlderInput}
                                     required />
@@ -155,11 +175,11 @@ export default function SuperHeroManager({ handlerSetSuperhero }: ToggleSetSuper
 
                             <button className="w-100 btn btn-primary btn-lg"
                                 type="submit">
-                                {currentProduct == 0 ? `Ingresar` : `Actualizar`}
+                                {productContext.currentSuperhero == 0 ? `Ingresar` : `Actualizar`}
                             </button>
                             {
-                                currentProduct != 0 ?
-                                    <button className="w-100 btn btn-primary btn-lg"
+                                productContext.currentSuperhero != 0 ?
+                                    <button className="w-100 btn btn-success btn-lg"
                                         type="button"
                                         onClick={hanlderIngresarNuevo}
                                         >

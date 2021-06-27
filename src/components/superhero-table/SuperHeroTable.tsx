@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { ToggleSetSuperHeroProps } from '../../interfaces/ToggleSetSuperHeroProps'
 import { productGetAllSelector } from "../../store/module/products/selectors"
@@ -7,10 +7,12 @@ import { initialStateGetAll } from "../../store/module/products/getAllReducer"
 import { Product } from '../../store/module/products/types'
 import styles from './SuperHeroTable.module.css'
 import SuperHeroActions from '../superhero-actions/SuperHeroActions'
+import SuperHeroContext, { ProductContextProps } from '../../contexts/SuperHeroContext'
 
-export default function SuperHeroTable({ handlerSetSuperhero }: ToggleSetSuperHeroProps) {
+export default function SuperHeroTable( handlers: ToggleSetSuperHeroProps) {
 
     const productData: any = useSelector(productGetAllSelector)
+    const productContext = useContext<ProductContextProps>(SuperHeroContext);
     const [products, setProducts] = useState(initialStateGetAll) 
     const dispatch = useDispatch()
 
@@ -22,7 +24,12 @@ export default function SuperHeroTable({ handlerSetSuperhero }: ToggleSetSuperHe
         setProducts(productData)
     }, [productData])
     
-
+    useEffect(() => {
+        if (productContext.refreshTable){
+            dispatch(productGetAllAction())
+            handlers.handlerSetRefreshGrid(false)
+        }
+    }, [productContext.refreshTable])
 
     if (products.loading ||products.success === null) return (<div className="d-flex justify-content-center mt-4">Cargando...</div>)
 
@@ -45,7 +52,7 @@ export default function SuperHeroTable({ handlerSetSuperhero }: ToggleSetSuperHe
                         products.data.map(( item : Product) => (
                             <tr key={item.id}>
                                 <td style={{textAlign: 'center'}}>
-                                   <SuperHeroActions id={item.id!} handlerSetSuperhero={handlerSetSuperhero} />
+                                   <SuperHeroActions id={item.id!} handlers={handlers } />
                                 </td>
                                 <td> { item.name } </td>
                                 <td> { item.description } </td>

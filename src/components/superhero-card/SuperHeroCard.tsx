@@ -8,6 +8,7 @@ import {
     useHistory
 } from 'react-router-dom'
 import styles  from './SuperHeroCard.module.css'
+import NotFound from '../../containers/not-found/NotFound'
 
 export default function SuperHeroCard() {
     const params: any = useParams()
@@ -31,7 +32,7 @@ export default function SuperHeroCard() {
 
     
     if (product.loading ||product.success === null) return (<div className="d-flex justify-content-center mt-4">Cargando...</div>)
-    if (product.success === false && !product.loading) history.push("/404")
+    if (product.success === false && !product.loading) return <NotFound/>
     return (
         <>
             <div className="d-flex justify-content-center mt-5">

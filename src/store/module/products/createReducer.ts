@@ -1,4 +1,7 @@
-const initialStateGetAll = {
+import { Selectors } from "../../types"
+import { Product } from "./types"
+
+const initialStateCreate : Selectors<Product> = {
     data: {},
     success: null,
     error: null,
@@ -10,7 +13,7 @@ export const PRODUCT_CREATE_START = 'PRODUCT_CREATE_START'
 export const PRODUCT_CREATE_SUCCESS = 'PRODUCT_CREATE_SUCCESS'
 export const PRODUCT_CREATE_FAILED = 'PRODUCT_CREATE_FAILED'
 
-const reducer = (prevState = initialStateGetAll, action: { type: string, payload: any }) => {
+const reducer = (prevState = initialStateCreate, action: { type: string, payload: any }) => {
     switch (action.type) {
         case PRODUCT_CREATE_START:
             return {

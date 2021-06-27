@@ -30,10 +30,26 @@ export const createProduct = async (product: ProductCreate, token: string) => {
 }
 
 
-export const deleteProduct = async (id: number) => {
+export const deleteProduct = async (id: number, token: string) => {
     const url = `${API_HOST}/products/${id}`
     const response = await fetch(url, {
-        method: 'DELETE'
+        method: 'DELETE',
+        headers: {
+            'Authorization' : `Bearer ${token}`
+        }
     })
-    return await response.json()
+    return await response.status
+}
+
+
+export const updateProduct = async (id: number,product: Product, token: string) => {
+    const url = `${API_HOST}/products/${id}`
+    const response = await fetch(url, {
+        method: 'PUT',
+        body: JSON.stringify(product),
+        headers: {
+            'Authorization' : `Bearer ${token}`
+        }
+    })
+    return await response.status
 }
