@@ -1,6 +1,6 @@
 import { PRODUCT_GETALL_FAILED, PRODUCT_GETALL_START, PRODUCT_GETALL_SUCCESS } from "./getAllReducer"
 import { createProduct, deleteProduct, getAllProduct, getProduct } from "../../../clients/products"
-import { ProductCreate } from "./types"
+import { Product, ProductCreate } from "./types"
 import { PRODUCT_CREATE_FAILED, PRODUCT_CREATE_START, PRODUCT_CREATE_SUCCESS } from "./createReducer"
 import { PRODUCT_GETONE_FAILED, PRODUCT_GETONE_START, PRODUCT_GETONE_SUCCESS } from "./getOneReducer"
 import { PRODUCT_DELETEONE_FAILED, PRODUCT_DELETEONE_START, PRODUCT_DELETEONE_SUCCESS } from "./deleteOneReducer"
@@ -14,9 +14,9 @@ export const productGetAllAction = () => (dispatch: any, getState: any) => {
     })
 }
 
-export const productCreateAction = (product: ProductCreate) => (dispatch: any, getState: any) => {
+export const productCreateAction = (product: ProductCreate, token: string) => (dispatch: any, getState: any) => {
     dispatch({ type: PRODUCT_CREATE_START, payload: null })
-    createProduct(product).then(data => {
+    createProduct(product, token).then(data => {
         dispatch({ type: PRODUCT_CREATE_SUCCESS, payload: data })
     }).catch(e => {
         dispatch({ type: PRODUCT_CREATE_FAILED, payload: e })

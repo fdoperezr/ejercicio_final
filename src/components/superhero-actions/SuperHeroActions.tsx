@@ -18,13 +18,13 @@ export default function SuperHeroActions(props: { id: number, handlerSetSuperher
         dispatch(deleteProduct(props.id))
     }
 
-    useEffect(() => {
-        setProduct(productData);
-        if (product.success && !!!product.loading) {
-            alert('Super Héroe eliminado correctamente')
-        }
+    // useEffect(() => {
+    //     setProduct(productData);
+    //     if (product.success && !!!product.loading) {
+    //         alert('Super Héroe eliminado correctamente')
+    //     }
         
-    }, [productData])
+    // }, [productData])
 
     if (product.loading) return (<div className="d-flex justify-content-center mt-4">Cargando...</div>)
 

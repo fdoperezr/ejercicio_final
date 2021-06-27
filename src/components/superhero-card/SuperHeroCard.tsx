@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { productDeleteOneSelector, productGetOneSelector } from "../../store/module/products/selectors"
+import { productGetOneSelector } from "../../store/module/products/selectors"
 import { initialStateGetOne } from "../../store/module/products/getOneReducer"
 import { productGetOneAction } from "../../store/module/products/actions"
 import {
@@ -8,7 +8,6 @@ import {
     useHistory
 } from 'react-router-dom'
 import styles  from './SuperHeroCard.module.css'
-import { debug } from 'console'
 
 export default function SuperHeroCard() {
     const params: any = useParams()
@@ -21,21 +20,18 @@ export default function SuperHeroCard() {
     const dispatch = useDispatch()
 
     useEffect(() => {
-        dispatch(productGetOneAction(params.id))
+        if (params.id !== 0){
+            dispatch(productGetOneAction(params.id))
+        }
     }, [dispatch, params.id])
 
     useEffect(() => {
         setProduct(productData);
     }, [productData])
 
-    useEffect(() => {
-        if (product.error){
-            history.push("/404")
-        }
-    }, [product, history])
     
     if (product.loading ||product.success === null) return (<div className="d-flex justify-content-center mt-4">Cargando...</div>)
-
+    if (product.success === false && !product.loading) history.push("/404")
     return (
         <>
             <div className="d-flex justify-content-center mt-5">
